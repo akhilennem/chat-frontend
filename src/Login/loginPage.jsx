@@ -8,11 +8,11 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
-  const url='https://chat-backend-qh64.onrender.com/'
+  const url='https://m4vx17k1-5000.inc1.devtunnels.ms/'
   // const url='http://localhost:5000/'
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       axios
         .post(url+"user/login", {
@@ -20,9 +20,14 @@ export default function LoginPage() {
           password: password,
         })
         .then((response) => {
-          if (response.data.success===true) {
+          if (response.data.success === true) {
             setSuccessMessage("Login Successful! 🎉");
-
+  
+            // Save user info
+            const { name, email } = response.data.data;  // Assuming response contains user data
+            localStorage.setItem("userName", name);
+            localStorage.setItem("userEmail", email);
+  
             setTimeout(() => {
               navigate("/chat"); // Redirect to /chat after successful login
             }, 1000);
@@ -35,6 +40,7 @@ export default function LoginPage() {
       console.log(err.message);
     }
   };
+  
 
   const handleSignupClick = () => {
     navigate("/signup"); // Redirect to signup page on button click

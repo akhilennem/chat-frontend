@@ -9,7 +9,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const url='https://chat-backend-qh64.onrender.com/'
+  const url='https://m4vx17k1-5000.inc1.devtunnels.ms/'
   // const url='http://localhost:5000/'
   const handleSubmit = async (e) => {
     e.preventDefault();

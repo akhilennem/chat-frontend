@@ -1,7 +1,20 @@
+
+
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* Chat Container */
 .chat-container {
-  max-width: 400px;
-  height: 80vh;
+  max-width: 100%;
+  width: 350px;
+  height: 100vh;
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -19,33 +32,62 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 8px;
   background: #e5ddd5;
+  scrollbar-width: thin;
 }
 
-/* User Messages */
+/* Message Container for each user */
+.message-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 4px;
+  max-width: 80%;
+}
+
+/* My Message Container (Aligns to the right) */
+.my-message-container {
+  align-items: flex-end;
+}
+
+/* Username Styling (Above Message Bubble) */
+.user-name {
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+  align-items: flex-start;
+  margin-bottom: -5px;
+  padding-left: 15px;
+}
+
+/* Message Bubbles */
+.message-text {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 15px;
+  word-wrap: break-word;
+  font-size: 14px;
+  max-width: fit-content;
+  min-width: 40px; /* Prevents overly tiny bubbles */
+  margin:7px 0;
+}
+
+/* My Messages (Sent) */
 .my-message {
-  align-self: flex-end;
   background-color: #007bff;
   color: white;
-  padding: 10px 14px;
   border-radius: 15px 15px 0 15px;
-  max-width: 70%;
-  word-wrap: break-word;
-  font-size: 14px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin-right: -55px; /* Adds space between your message and the right edge */
 }
 
-/* Other Users' Messages */
+/* Other Users' Messages (Received) */
 .other-message {
-  align-self: flex-start;
   background-color: #ffffff;
   color: black;
-  padding: 10px 14px;
   border-radius: 15px 15px 15px 0;
-  max-width: 70%;
-  word-wrap: break-word;
-  font-size: 14px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin-left: 8px; /* Adds space between received message and left edge */
 }
 
 /* Input Section */
@@ -68,11 +110,11 @@ input {
 }
 
 button {
-  margin-left: 10px;
+  margin-left: 1px;
   padding: 10px 15px;
   border: none;
   background: #007bff;
-  color: white;
+  color: rgb(255, 255, 255);
   border-radius: 50%;
   cursor: pointer;
   font-size: 16px;
