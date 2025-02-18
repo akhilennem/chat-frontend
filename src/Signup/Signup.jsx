@@ -9,12 +9,13 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-
+  const url='https://chat-backend-qh64.onrender.com/'
+  // const url='http://localhost:5000/'
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:5000/user/sign-up", {
+      const response = await axios.post(url, {
         name,
         email,
         password,

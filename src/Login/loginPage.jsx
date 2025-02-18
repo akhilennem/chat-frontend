@@ -8,13 +8,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
-
+  const url='https://chat-backend-qh64.onrender.com/'
+  // const url='http://localhost:5000/'
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       axios
-        .post("http://localhost:5000/user/login", {
+        .post(url, {
           email: email,
           password: password,
         })
