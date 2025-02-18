@@ -15,7 +15,7 @@ export default function LoginPage() {
 
     try {
       axios
-        .post(url, {
+        .post(url+"user/login", {
           email: email,
           password: password,
         })

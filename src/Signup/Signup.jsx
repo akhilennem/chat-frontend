@@ -15,7 +15,7 @@ export default function SignupPage() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(url, {
+      const response = await axios.post(url+"user/sign-up", {
         name,
         email,
         password,
