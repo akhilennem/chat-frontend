@@ -29,7 +29,7 @@ export default function LoginPage() {
             localStorage.setItem("userEmail", email);
   
             setTimeout(() => {
-              navigate("/chat"); // Redirect to /chat after successful login
+              navigate("/chatHome"); // Redirect to /chat after successful login
             }, 1000);
           } else {
             setSuccessMessage('Invalid Username or Password..');

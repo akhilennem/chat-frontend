@@ -15,6 +15,7 @@ const Chat = () => {
   const [socketId, setSocketId] = useState("");
   const userName = localStorage.getItem("userName");
   const userEmail = localStorage.getItem("userEmail");
+  const [chatID,setChatID]=useState("")
   const { email } = useParams();
 
   useEffect(() => {
@@ -26,8 +27,9 @@ const Chat = () => {
 
     // Handle incoming messages
     const handleMessage = (data) => {
-      console.log("Received message from server:", data);
-      
+      console.log("Received message from server:", data.chatID);
+      setChatID(data.chatID)
+      console.log(chatID)
       setMessages(prevMessages => {
         // Prevent duplicates
         if (!prevMessages.some(msg => msg.message === data.message && msg.user === data.user)) {
@@ -40,10 +42,12 @@ const Chat = () => {
 
     socket.on("receive_message", handleMessage);
 
+    //  console.log('setChatID(handleMessage) ',)
+    // setChatID(handleMessage)
     return () => {
       socket.off("receive_message", handleMessage);
     };
-  }, [userName]);
+  }, [userName,chatID]);
 
   useEffect(() => {
     // Fetch old messages when component loads
@@ -70,7 +74,7 @@ const Chat = () => {
     const newMessage = {
       message: message,
       sender: socketId,
-      // from: userName,
+      chatID: chatID,
       user: userEmail,
       to:email
     };
@@ -84,8 +88,9 @@ const Chat = () => {
   
   // Modify handleMessage to include all messages
   const handleMessage = (data) => {
-    console.log("Received message from server:", data);
-    
+    console.log("Received message from server:");
+    setChatID(data.chatID)
+    console.log('chatID ',chatID)
     setMessages(prevMessages => {
       if (!prevMessages.some(msg => msg.message === data.message && msg.user === data.user)) {
         return [...prevMessages, data];
@@ -112,7 +117,7 @@ const Chat = () => {
         const response = await axios.get(url+`user/messages?from=${userEmail}&to=${email}`);
         
         // Store ALL messages in `messages` state
-        setMessages(response.data);  
+        setMessages(response.data); 
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
