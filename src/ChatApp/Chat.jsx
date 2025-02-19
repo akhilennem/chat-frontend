@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import axios from "axios";
 import { FaPaperPlane } from "react-icons/fa";
 import "./Chat.css";
-
+import { useParams  } from "react-router-dom";
 // const url = 'http://localhost:5000/';
 const url="https://m4vx17k1-5000.inc1.devtunnels.ms/"
 const socket = io.connect(url);
@@ -15,6 +15,7 @@ const Chat = () => {
   const [socketId, setSocketId] = useState("");
   const userName = localStorage.getItem("userName");
   const userEmail = localStorage.getItem("userEmail");
+  const { email } = useParams();
 
   useEffect(() => {
     // Initialize socket connection
@@ -48,12 +49,12 @@ const Chat = () => {
     // Fetch old messages when component loads
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(url+"user/messages");
+        const response = await axios.get(url+`user/messages?email=${email}`);
         
         // Filter messages by matching username
-        const filteredMessages = response.data.filter(msg => msg.user != userName);
+        const filteredMessages = response.data.filter(msg => msg.user != userEmail);
         setMessages(filteredMessages);
-        const filteredMyMessages = response.data.filter(msg => msg.user === userName);
+        const filteredMyMessages = response.data.filter(msg => msg.user === userEmail);
         setmyMessages(filteredMyMessages)
       } catch (error) {
         console.error("Error fetching messages:", error);
@@ -69,8 +70,9 @@ const Chat = () => {
     const newMessage = {
       message: message,
       sender: socketId,
-      user: userName,
-      email: userEmail
+      // from: userName,
+      user: userEmail,
+      to:email
     };
   
     // Emit message to server
@@ -107,7 +109,7 @@ const Chat = () => {
     // Fetch old messages when component loads
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(url+"user/messages");
+        const response = await axios.get(url+`user/messages?from=${userEmail}&to=${email}`);
         
         // Store ALL messages in `messages` state
         setMessages(response.data);  
@@ -134,8 +136,8 @@ const Chat = () => {
               key={index} 
               className={`message-container ${msg.user === userName ? "my-message-container" : ""}`}
             >
-              {showUserName && msg.user !== userName && <p className="user-name">{msg.user}</p>}
-              <p className={`message-text ${msg.user === userName ? "my-message" : "other-message"}`}>
+              {/* {showUserName && msg.user !== userName && <p className="user-name">{msg.user}</p>} */}
+              <p className={`message-text ${msg.user === userEmail ? "my-message" : "other-message"}`}>
                 {msg.message}
               </p>
             </div>
