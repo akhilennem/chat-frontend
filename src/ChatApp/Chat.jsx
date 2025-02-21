@@ -4,8 +4,8 @@ import axios from "axios";
 import { FaPaperPlane } from "react-icons/fa";
 import "./Chat.css";
 import { useParams  } from "react-router-dom";
-// const url = 'http://localhost:5000/';
-const url="https://m4vx17k1-5000.inc1.devtunnels.ms/"
+const url = 'http://localhost:5000/';
+// const url="https://m4vx17k1-5000.inc1.devtunnels.ms/"
 const socket = io.connect(url);
 
 const Chat = () => {
