@@ -7,14 +7,30 @@ html, body {
   align-items: center;
   background-color: #f0f2f5;
 }
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.back-button {
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.2s;
+}
+
+.back-button:hover {
+  color: #555;
+}
 
 /* Chat Container */
-.chat-container {
-  width: 350px;
-  height: 100vh;
+.chat-container {  
+  height: 100vh; /* Full screen height */
+  width: 100vw; 
   display: flex;
   flex-direction: column;
-  border: 1px solid #ccc;
+  border: 1px solid #000000;
   border-radius: 10px;
   background-color: #fff;
   overflow: hidden;
@@ -28,7 +44,7 @@ html, body {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  background: #e5ddd5;
+  background: #4797a5;
   scrollbar-width: thin;
 }
 

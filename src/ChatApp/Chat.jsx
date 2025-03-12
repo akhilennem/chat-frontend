@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import axios from "axios";
-import { FaPaperPlane } from "react-icons/fa";
+import { FaPaperPlane, FaArrowLeft } from "react-icons/fa"
 import "./Chat.css";
+import { useNavigate } from "react-router-dom";
 import { useParams  } from "react-router-dom";
 const url = 'http://localhost:5000/';
 // const url="https://m4vx17k1-5000.inc1.devtunnels.ms/"
@@ -17,7 +18,7 @@ const Chat = () => {
   const userEmail = localStorage.getItem("userEmail");
   const [chatID,setChatID]=useState("")
   const { email } = useParams();
-
+  const navigate = useNavigate();
   useEffect(() => {
     // Initialize socket connection
     socket.on("connect", () => {
@@ -50,23 +51,18 @@ const Chat = () => {
   }, [userName,chatID]);
 
   useEffect(() => {
-    // Fetch old messages when component loads
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(url+`user/messages?email=${email}`);
-        
-        // Filter messages by matching username
-        const filteredMessages = response.data.filter(msg => msg.user != userEmail);
-        setMessages(filteredMessages);
-        const filteredMyMessages = response.data.filter(msg => msg.user === userEmail);
-        setmyMessages(filteredMyMessages)
+        const response = await axios.get(`${url}user/messages?from=${userEmail}&to=${email}`);
+        setMessages(response.data);
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
     };
-
+  
     fetchMessages();
-  }, []);
+  }, [email, userEmail]); // Ensure it runs when `email` or `userEmail` changes
+  
 
   const sendMessage = () => {
     if (!message.trim()) return;
@@ -131,7 +127,13 @@ const Chat = () => {
 
   return (
     <div className="chat-container">
-      <h2>Welcome, {userName}!</h2>
+     <div className="chat-header">
+      {/* Back Button */}
+      <FaArrowLeft
+        className="back-button"
+        onClick={() => navigate("/chatHome")}  // Navigate explicitly to ChatHome
+      />        <h2>Welcome, {userName}!</h2>
+      </div>
       <div className="chat-box">
         {messages.map((msg, index) => {
           const showUserName = index === 0 || messages[index - 1].user !== msg.user;
