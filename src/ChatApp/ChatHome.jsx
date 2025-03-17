@@ -5,12 +5,13 @@ import { io } from "socket.io-client";
 import "./ChatHome.css";
 
 const url = "http://localhost:5000/";
-const socket = io(url); // Connect to Socket.IO
+const socket = io(url);
 
-const ChatHome = ({ openChat }) => {
+const ChatHome = () => {
   const [chats, setChats] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
   const userEmail = localStorage.getItem("userEmail");
   const navigate = useNavigate();
 
@@ -48,7 +49,6 @@ const ChatHome = ({ openChat }) => {
 
     fetchChats();
 
-    // Listen for new messages and update the chat list
     socket.on("newMessage", (newMessage) => {
       setChats((prevChats) => {
         const updatedChats = [...prevChats];
@@ -70,7 +70,7 @@ const ChatHome = ({ openChat }) => {
     });
 
     return () => {
-      socket.off("newMessage"); // Clean up listener
+      socket.off("newMessage");
     };
   }, [userEmail]);
 
@@ -79,41 +79,61 @@ const ChatHome = ({ openChat }) => {
     setSearchQuery(query);
     if (query.trim() === "") {
       setSearchResults([]);
+      setSelectedUser(null);
       return;
     }
     try {
       const response = await axios.get(`${url}user/get-users?email=${query}`);
-      setSearchResults(response.data.success ? response.data.users : []);
+      if (response.data.success) {
+        setSearchResults(response.data.users);
+        setSelectedUser(response.data.users.length > 0 ? response.data.users[0] : null);
+      } else {
+        setSearchResults([]);
+        setSelectedUser(null);
+      }
     } catch (error) {
       console.error("Error searching users:", error);
       setSearchResults([]);
+      setSelectedUser(null);
     }
   };
 
+  // Open chat when clicking on the card
   const handleOpenChat = (email) => {
-    navigate(`/chat/${email}`);
+    console.log("Navigating to chat:", email);
+    navigate(`/chat/${encodeURIComponent(email)}`);
+  };
+
+  // Close the selected user when clicking ❌
+  const handleCloseSelectedUser = (e) => {
+    e.stopPropagation(); // Prevents click from opening chat
+    setSelectedUser(null);
   };
 
   return (
     <div className="chat-home-container">
-      <input
-        type="text"
-        placeholder="Search by email..."
-        value={searchQuery}
-        onChange={handleSearch}
-        className="search-bar"
-      />
+      {/* Search Bar Container */}
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search by email..."
+          value={searchQuery}
+          onChange={handleSearch}
+          className="search-bar"
+        />
 
-      {searchResults.length > 0 && (
-        <div className="search-results">
-          {searchResults.map((user) => (
-            <div key={user._id} className="search-item" onClick={() => handleOpenChat(user.email)}>
-              {user.name}
-            </div>
-          ))}
-        </div>
-      )}
+        {/* Searched Email Card */}
+        {selectedUser && (
+          <div className="search-result-card" onClick={() => handleOpenChat(selectedUser.email)}>
+            <p>{selectedUser.name} ({selectedUser.email})</p>
+            <button className="close-card" onClick={handleCloseSelectedUser}>
+              ❌
+            </button>
+          </div>
+        )}
+      </div>
 
+      {/* Chat List */}
       <div className="chat-list">
         {chats.length === 0 ? (
           <p>No chats available</p>
