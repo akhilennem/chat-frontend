@@ -98,15 +98,13 @@ const ChatHome = () => {
     }
   };
 
-  // Open chat when clicking on the card
   const handleOpenChat = (email) => {
     console.log("Navigating to chat:", email);
     navigate(`/chat/${encodeURIComponent(email)}`);
   };
 
-  // Close the selected user when clicking ❌
   const handleCloseSelectedUser = (e) => {
-    e.stopPropagation(); // Prevents click from opening chat
+    e.stopPropagation();
     setSelectedUser(null);
   };
 
@@ -122,13 +120,21 @@ const ChatHome = () => {
           className="search-bar"
         />
 
-        {/* Searched Email Card */}
-        {selectedUser && (
-          <div className="search-result-card" onClick={() => handleOpenChat(selectedUser.email)}>
-            <p>{selectedUser.name} ({selectedUser.email})</p>
-            <button className="close-card" onClick={handleCloseSelectedUser}>
-              ❌
-            </button>
+        {/* Search Results Scrollable Box */}
+        {searchResults.length > 0 && (
+          <div className="search-results">
+            {searchResults.map((user) => (
+              <div
+                key={user.email}
+                className="search-result-card"
+                onClick={() => handleOpenChat(user.email)}
+              >
+                <p>{user.name} ({user.email})</p>
+                <button className="close-card" onClick={handleCloseSelectedUser}>
+                  ❌
+                </button>
+              </div>
+            ))}
           </div>
         )}
       </div>
